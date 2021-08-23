@@ -1,0 +1,49 @@
+const express = require('express');
+const env = require('dotenv')
+const app = express();
+const mongoose = require('mongoose');
+const path = require('path');
+const cors = require('cors');
+
+env.config();
+
+//routes
+const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin/auth');
+const initialDataRoutes = require('./routes/admin/initialData');
+const pageRoutes = require('./routes/admin/page');
+const adminOrderRoutes = require('./routes/admin/order.routes');
+const categoryRoutes = require('./routes/category');
+const productRoutes = require('./routes/product');
+const cartRoutes = require('./routes/cart');
+const orderRoutes = require("./routes/order");
+
+// mongodb+srv://phamquocan:<password>@cluster0.lw60v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+mongoose.connect(
+  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.lw60v.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  }
+).then(() => {
+  console.log('Database connected');
+});
+
+app.use(express.json());
+app.use(cors());
+app.use('/public', express.static(path.join(__dirname, 'uploads')));
+app.use('/api', authRoutes);
+app.use('/api', adminRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', productRoutes);
+app.use('/api', cartRoutes);
+app.use('/api', initialDataRoutes);
+app.use('/api', pageRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", adminOrderRoutes);
+
+app.listen(process.env.PORT, () => {
+  console.log(`server is running on port ${process.env.PORT}`)
+})
