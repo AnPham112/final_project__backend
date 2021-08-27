@@ -16,7 +16,8 @@ const adminOrderRoutes = require('./routes/admin/order.routes');
 const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const cartRoutes = require('./routes/cart');
-const orderRoutes = require("./routes/order");
+const orderRoutes = require('./routes/order');
+const addressRoutes = require('./routes/address');
 
 // mongodb+srv://phamquocan:<password>@cluster0.lw60v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 mongoose.connect(
@@ -43,6 +44,7 @@ app.use('/api', initialDataRoutes);
 app.use('/api', pageRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", adminOrderRoutes);
+app.use("/api", addressRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`)

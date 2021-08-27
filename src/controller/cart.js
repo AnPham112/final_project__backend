@@ -21,26 +21,25 @@ exports.addItemToCart = (req, res) => {
           const item = cart.cartItems.find(c => c.product == product);
           let condition, update;
           if (item) {
-            condition = { "user": req.user._id, "cartItems.product": product }
+            condition = { user: req.user._id, "cartItems.product": product }
             update = {
               $set: {
-                "cartItems.$": cartItems
+                "cartItems.$": cartItem
               }
-              // quantity: item.quantity + req.body.cartItems.quantity
             };
           } else {
             condition = { user: req.user._id };
             update = {
               $push: {
-                "cartItems": cartItem
+                cartItems: cartItem
               }
             };
           }
-          promiseArray.push(runUpdate(condition, update))
+          promiseArray.push(runUpdate(condition, update));
         });
         Promise.all(promiseArray)
           .then(response => res.status(201).json({ response }))
-          .catch(error => res.status(400).json({ error }))
+          .catch(error => res.status(400).json({ error }));
       } else {
         //if cart doesn't exist then create a new cart
         const cart = new Cart({
@@ -59,7 +58,7 @@ exports.addItemToCart = (req, res) => {
 
 exports.getCartItems = (req, res) => {
   Cart.findOne({ user: req.user._id })
-    .populate('cartItems.product', '_id name price productPictures')
+    .populate("cartItems.product", "_id name price productPictures")
     .exec((error, cart) => {
       if (error) return res.status(400).json({ error });
       if (cart) {
@@ -81,11 +80,11 @@ exports.getCartItems = (req, res) => {
 exports.removeCartItems = (req, res) => {
   const { productId } = req.body.payload;
   if (productId) {
-    Cart.update(
+    Cart.updateOne(
       { user: req.user._id },
       {
         $pull: {
-          cartItems: { product: productId },
+          cartItems: { product: productId }
         }
       }
     ).exec((error, result) => {

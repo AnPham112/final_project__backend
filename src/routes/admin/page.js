@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { upload, requireSignin, adminMiddleware } = require('../../common-middleware');
-const { createPage, getPage } = require('../../controller/admin/page');
+const { createPage, getPage, getAllPages } = require('../../controller/admin/page');
 
 
 router.post(
@@ -14,5 +14,6 @@ router.post(
   ]), createPage
 );
 router.get(`/page/:category/:type`, getPage);
+router.get(`/page/getAllPages`, getAllPages);
 
 module.exports = router;

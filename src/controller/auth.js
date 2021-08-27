@@ -63,3 +63,38 @@ exports.signin = (req, res) => {
       }
     });
 }
+
+exports.getUserProfile = async (req, res) => {
+  const user = await User.findById(req.user._id)
+  if (user) {
+    res.json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email
+    })
+  } else {
+    res.status(404).json({ message: 'User not found' })
+  }
+}
+
+exports.updateUserProfile = async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.lastName = req.body.lastName || user.lastName
+    user.firstName = req.body.firstName || user.firstName
+    user.email = req.body.email || user.email
+    if (req.body.password) {
+      user.password = req.body.password
+    }
+    const updatedUser = await user.save()
+    res.status(201).json({
+      _id: updatedUser._id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email
+    })
+  } else {
+    res.status(404).json({ message: 'User not found' });
+  }
+}

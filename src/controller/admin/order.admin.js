@@ -2,18 +2,11 @@ const Order = require('../../models/order');
 
 exports.updateOrder = (req, res) => {
   Order.updateOne(
-    {
-      _id: req.body.orderId,
-      "orderStatus.type": req.body.type
-    },
+    { _id: req.body.orderId, "orderStatus.type": req.body.type },
     {
       $set: {
         "orderStatus.$": [
-          {
-            type: req.body.type,
-            date: new Date(),
-            isCompleted: true
-          }
+          { type: req.body.type, date: new Date(), isCompleted: true }
         ]
       }
     }
