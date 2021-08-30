@@ -50,7 +50,7 @@ exports.getPage = (req, res) => {
   }
 };
 
-exports.getAllPages = async (req, res) => {
+exports.getAllPages = (req, res) => {
   Page.find({})
     .exec((error, pages) => {
       if (error) return res.status(400).json({ error });
@@ -58,4 +58,18 @@ exports.getAllPages = async (req, res) => {
         res.status(200).json({ pages });
       }
     });
+}
+
+exports.deletePageById = (req, res) => {
+  const { pageId } = req.body.payload;
+  if (pageId) {
+    Page.deleteOne({ _id: pageId }).exec((error, result) => {
+      if (error) return res.status(400).json({ error });
+      if (result) {
+        res.status(202).json({ result });
+      }
+    });
+  } else {
+    res.status(400).json({ error: 'Params required' });
+  }
 }

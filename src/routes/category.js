@@ -10,7 +10,8 @@ const {
   deleteCategories } = require('../controller/category');
 const {
   requireSignin,
-  adminMiddleware } = require('../common-middleware');
+  adminMiddleware
+} = require('../common-middleware');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

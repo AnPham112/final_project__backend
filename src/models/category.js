@@ -10,15 +10,9 @@ const categorySchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  type: {
-    type: String
-  },
-  categoryImage: [
-    { img: { type: String } }
-  ],
-  parentId: {
-    type: String
-  }
+  type: { type: String },
+  categoryImage: { img: { type: String } },
+  parentId: { type: String }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Category', categorySchema);
