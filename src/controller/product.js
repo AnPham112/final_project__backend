@@ -1,6 +1,7 @@
 const slugify = require('slugify');
 const Product = require('../models/product');
 const Category = require('../models/category');
+const Review = require('../models/review');
 
 exports.createProduct = (req, res) => {
   const {
@@ -48,18 +49,18 @@ exports.getProductsBySlug = (req, res) => {
                 res.status(200).json({
                   products,
                   priceRange: {
-                    under5k: 5000,
-                    under10k: 10000,
-                    under15k: 15000,
-                    under20k: 20000,
-                    under30k: 30000
+                    under20: 20,
+                    under40: 40,
+                    under60: 60,
+                    under80: 80,
+                    under100: 100
                   },
                   productsByPrice: {
-                    under5k: products.filter((product) => product.price <= 5000),
-                    under10k: products.filter((product) => product.price > 5000 && product.price <= 10000),
-                    under15k: products.filter((product) => product.price > 10000 && product.price <= 15000),
-                    under20k: products.filter((product) => product.price > 15000 && product.price <= 20000),
-                    under30k: products.filter((product) => product.price > 20000 && product.price <= 30000)
+                    under20: products.filter((product) => product.price <= 20),
+                    under40: products.filter((product) => product.price > 20 && product.price <= 40),
+                    under60: products.filter((product) => product.price > 40 && product.price <= 60),
+                    under80: products.filter((product) => product.price > 60 && product.price <= 80),
+                    under100: products.filter((product) => product.price > 80 && product.price <= 100)
                   }
                 });
               }
@@ -101,44 +102,57 @@ exports.deleteProductById = (req, res) => {
 }
 
 exports.getProducts = async (req, res) => {
-  const products = await Product.find({ createdBy: req.user._id })
+  const products = await Product.find({})
     .select("_id name price quantity slug description productPictures category")
     .populate({ path: "category", select: "_id name" })
     .exec();
   res.status(200).json({ products });
 }
 
-exports.createProductReview = async (req, res) => {
-  const { rating, comment } = req.body
+exports.getHomeProducts = (req, res) => {
+  Product.find({})
+    .exec((error, products) => {
+      if (error) return res.status(400).json({ error });
+      if (products) {
+        res.status(200).json({ products });
+      }
+    })
+}
 
-  const product = await Product.findById(req.params.id)
-  if (product) {
-    const alreadyReviewed = product.reviews.find(
-      (r) => r.user.toString() === req.user._id.toString()
-    )
+exports.createReview = (req, res) => {
+  const review = new Review(req.body)
+  review.save((error, review) => {
+    if (error) return res.status(400).json({ error });
+    Review.find({ '_id': review._id })
+      .exec((error, result) => {
+        if (error) return res.status(400).json({ error });
+        if (result) {
+          res.status(201).json({ result });
+        }
+      })
+  })
+}
 
-    if (alreadyReviewed) {
-      res.status(400).json({ error: 'Product already reviewed' });
-    }
+exports.getReviews = (req, res) => {
+  Review.find({})
+    .populate("writer", "_id firstName lastName")
+    .exec((error, reviews) => {
+      if (error) return res.status(400).json({ error });
+      if (reviews) {
+        res.status(200).json({ reviews });
+      }
+    });
+}
 
-    const review = {
-      name: req.user.name,
-      rating: Number(rating),
-      comment,
-      user: req.user._id,
-    }
-
-    product.reviews.push(review)
-
-    product.numReviews = product.reviews.length
-
-    product.rating =
-      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
-      product.reviews.length
-
-    await product.save()
-    res.status(201).json({ message: 'Review added' });
-  } else {
-    res.status(404).json({ error: 'Product not found' });
+exports.getProductById = async (req, res) => {
+  const { productId } = req.params;
+  if (productId) {
+    Product.findOne({ _id: productId })
+      .exec((error, product) => {
+        if (product) {
+          res.status(201).json({ product })
+        }
+        if (error) return res.status(404).json({ error: 'Product not found' });
+      })
   }
 }

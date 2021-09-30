@@ -8,16 +8,20 @@ const cors = require('cors');
 env.config();
 
 //routes
-const authRoutes = require('./routes/auth');
+
 const adminRoutes = require('./routes/admin/auth');
 const initialDataRoutes = require('./routes/admin/initialData');
-const pageRoutes = require('./routes/admin/page');
-const adminOrderRoutes = require('./routes/admin/order.routes');
+// const pageRoutes = require('./routes/admin/page');
+const adminOrderRoutes = require('./routes/admin/orderAdmin');
+const userRoutes = require('./routes/admin/user');
+const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 const addressRoutes = require('./routes/address');
+const wishListRoutes = require('./routes/wishlist');
+
 
 // mongodb+srv://phamquocan:<password>@cluster0.lw60v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 mongoose.connect(
@@ -41,10 +45,12 @@ app.use('/api', categoryRoutes);
 app.use('/api', productRoutes);
 app.use('/api', cartRoutes);
 app.use('/api', initialDataRoutes);
-app.use('/api', pageRoutes);
-app.use("/api", orderRoutes);
-app.use("/api", adminOrderRoutes);
-app.use("/api", addressRoutes);
+// app.use('/api', pageRoutes);
+app.use('/api', orderRoutes);
+app.use('/api', adminOrderRoutes);
+app.use('/api', addressRoutes);
+app.use('/api', wishListRoutes);
+app.use('/api', userRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`)

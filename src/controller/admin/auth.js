@@ -32,7 +32,6 @@ exports.signup = (req, res) => {
             message: 'Something went wrong'
           })
         }
-
         if (data) {
           return res.status(201).json({
             message: 'Admin created successfully'
@@ -47,7 +46,6 @@ exports.signin = (req, res) => {
     .exec(async (error, user) => {
       if (error) return res.status(400).json({ error });
       if (user) {
-
         const isPassword = await user.authenticate(req.body.password);
         if (isPassword && user.role === 'admin') {
           const token = jwt.sign(
@@ -63,7 +61,7 @@ exports.signin = (req, res) => {
           });
         } else {
           return res.status(400).json({
-            message: 'Invalid password'
+            message: 'Email or password is incorrect'
           })
         }
       } else {

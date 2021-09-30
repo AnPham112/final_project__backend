@@ -67,3 +67,11 @@ exports.getOrder = (req, res) => {
       }
     });
 }
+
+exports.getOrderPublic = async (req, res) => {
+  const orders = await Order.find({})
+    .select('items')
+    .populate("items.productId", "name")
+    .exec();
+  res.status(200).json({ orders });
+}

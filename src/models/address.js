@@ -37,18 +37,6 @@ const addressSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  state: {
-    type: String,
-    required: true,
-  },
-  landmark: {
-    type: String,
-    min: 10,
-    max: 100
-  },
-  alternatePhone: {
-    type: String
-  },
   addressType: {
     type: String,
     required: true,
