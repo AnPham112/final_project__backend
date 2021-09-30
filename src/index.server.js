@@ -11,7 +11,6 @@ env.config();
 
 const adminRoutes = require('./routes/admin/auth');
 const initialDataRoutes = require('./routes/admin/initialData');
-// const pageRoutes = require('./routes/admin/page');
 const adminOrderRoutes = require('./routes/admin/orderAdmin');
 const userRoutes = require('./routes/admin/user');
 const authRoutes = require('./routes/auth');
@@ -45,7 +44,6 @@ app.use('/api', categoryRoutes);
 app.use('/api', productRoutes);
 app.use('/api', cartRoutes);
 app.use('/api', initialDataRoutes);
-// app.use('/api', pageRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', adminOrderRoutes);
 app.use('/api', addressRoutes);
