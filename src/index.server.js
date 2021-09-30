@@ -8,7 +8,6 @@ const cors = require('cors');
 env.config();
 
 //routes
-
 const adminRoutes = require('./routes/admin/auth');
 const initialDataRoutes = require('./routes/admin/initialData');
 const adminOrderRoutes = require('./routes/admin/orderAdmin');
@@ -20,7 +19,6 @@ const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 const addressRoutes = require('./routes/address');
 const wishListRoutes = require('./routes/wishlist');
-
 
 // mongodb+srv://phamquocan:<password>@cluster0.lw60v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 mongoose.connect(
