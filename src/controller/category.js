@@ -26,12 +26,11 @@ function createCategories(categories, parentId = null) {
 exports.addCategory = (req, res) => {
   const categoryObj = {
     name: req.body.name,
-    // slug: `${slugify(req.body.name)}-${shortid.generate()}`
     slug: `${slugify(req.body.name)}`,
     createdBy: req.user._id,
   }
   if (req.file) {
-    categoryObj.categoryImage = process.env.API + '/public/' + req.file.filename;
+    categoryObj.categoryImage = '/public/' + req.file.filename;
   }
   if (req.body.parentId) {
     categoryObj.parentId = req.body.parentId;
