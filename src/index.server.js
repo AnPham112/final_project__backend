@@ -19,7 +19,7 @@ const orderRoutes = require('./routes/order');
 const addressRoutes = require('./routes/address');
 const wishListRoutes = require('./routes/wishlist');
 
-// mongodb+srv://phamquocan:<password>@cluster0.lw60v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+// connect moongodb
 mongoose.connect(
   `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.lw60v.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`,
   {
@@ -32,8 +32,8 @@ mongoose.connect(
   console.log('Database connected');
 });
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', authRoutes);
 app.use('/api', adminRoutes);
