@@ -68,8 +68,7 @@ exports.getWishListItems = (req, res) => {
             _id: item.product?._id.toString(),
             name: item.product?.name,
             img: item.product?.productPictures[0].img,
-            price: item.product?.price,
-            qty: item.quantity,
+            price: item.product?.price
           }
         });
         res.status(200).json({ wishListItems });

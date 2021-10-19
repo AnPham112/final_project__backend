@@ -13,6 +13,7 @@ exports.signup = (req, res) => {
       if (user) return res.status(400).json({
         message: 'User already registered'
       });
+
       const { firstName, lastName, email, password } = req.body;
       const hash_password = await bcrypt.hash(password, 10);
       const _user = new User({
@@ -22,7 +23,8 @@ exports.signup = (req, res) => {
         hash_password,
         userName: shortid.generate(),
       });
-      _user.save((error, data) => {
+
+      _user.save((error, user) => {
         if (error) {
           return res.status(400).json({ message: 'Something went wrong' });
         }
@@ -30,7 +32,6 @@ exports.signup = (req, res) => {
         if (user) {
           const token = generateJwtToken(user._id, user.role);
           const { _id, firstName, lastName, email, role, fullName } = user;
-
           return res.status(201).json({
             token,
             user: { _id, firstName, lastName, email, role, fullName }
@@ -57,7 +58,7 @@ exports.signin = (req, res) => {
           return res.status(400).json({ message: 'Invalid password' });
         }
       } else {
-        return res.status(400).json({ message: 'Something went wrong' });
+        return res.status(400).json({ message: 'Email or password is invalid' });
       }
     });
 }

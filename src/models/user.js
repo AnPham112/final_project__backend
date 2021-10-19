@@ -39,9 +39,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
-  },
-  contactNumber: { type: String },
-  profilePicture: { type: String }
+  }
 }, { timestamps: true });
 
 userSchema.virtual('fullName')
