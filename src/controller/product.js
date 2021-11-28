@@ -2,6 +2,7 @@ const slugify = require('slugify');
 const Product = require('../models/product');
 const Category = require('../models/category');
 const Review = require('../models/review');
+const review = require('../models/review');
 
 exports.createProduct = (req, res) => {
   const {
@@ -96,8 +97,6 @@ exports.deleteProductById = (req, res) => {
         res.status(202).json({ result });
       }
     });
-  } else {
-    res.status(400).json({ error: 'Params required' });
   }
 }
 
@@ -119,29 +118,20 @@ exports.getHomeProducts = (req, res) => {
     })
 }
 
-exports.createReview = (req, res) => {
-  const review = new Review(req.body)
-  review.save((error, review) => {
-    if (error) return res.status(400).json({ error });
-    Review.find({ '_id': review._id })
-      .exec((error, result) => {
-        if (error) return res.status(400).json({ error });
-        if (result) {
-          res.status(201).json({ result });
-        }
-      })
-  })
+exports.createReview = async (req, res) => {
+  const newReview = new Review(req.body);
+  const product = await Product.findById(req.body.id)
+  newReview.owner = product;
+  await newReview.save()
+  product.reviews.push(newReview._id);
+  await product.save()
+  res.status(201).json({ review: newReview })
 }
 
-exports.getReviews = (req, res) => {
-  Review.find({})
-    .populate("writer", "_id firstName lastName")
-    .exec((error, reviews) => {
-      if (error) return res.status(400).json({ error });
-      if (reviews) {
-        res.status(200).json({ reviews });
-      }
-    });
+exports.getReviews = async (req, res) => {
+  const product = await Product.findById(req.body.id)
+    .populate('reviews')
+  res.status(200).json({ reviews: product.reviews })
 }
 
 exports.getProductById = async (req, res) => {

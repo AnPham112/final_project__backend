@@ -12,7 +12,8 @@ const {
   getProducts,
   createReview,
   getReviews,
-  getHomeProducts
+  getHomeProducts,
+  getWriters
 } = require('../controller/product');
 
 const storage = multer.diskStorage({
@@ -30,7 +31,7 @@ router.post('/product/create', requireSignin, adminMiddleware, upload.array('pro
 router.get('/products/:slug', getProductsBySlug);
 router.get('/product/:productId', getProductDetailsById);
 router.post('/comment/createReview', requireSignin, userMiddleware, createReview);
-router.get('/comment/getReviews', getReviews);
+router.post('/comment/getReviews', getReviews);
 router.delete('/product/deleteProductById', requireSignin, adminMiddleware, deleteProductById);
 router.post('/product/getProducts', requireSignin, adminMiddleware, getProducts);
 router.get('/getProducts', getHomeProducts);
